@@ -45,7 +45,7 @@ function emojisplosion(button) {
         span.style.position = 'fixed';
         span.style.left = `${rect.left + window.scrollX}px`;
         span.style.top = `${rect.top + window.scrollY}px`;
-        span.style.transition = 'transform 0.5s, opacity 0.5s';
+        span.style.transition = 'transform 1s, opacity 1s';
         span.style.transformOrigin = 'center';
         span.style.zIndex = 9999;
 
@@ -63,7 +63,7 @@ function emojisplosion(button) {
 
         setTimeout(() => {
             document.body.removeChild(span);
-        }, 500);
+        }, 1000);
     }
 }
 

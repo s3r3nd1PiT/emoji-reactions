@@ -31,12 +31,16 @@ body {
 .emoji-icon {
     font-size: 24px;
     transition: transform 0.3s;
+    position: relative;
+    bottom: 10px; /* Adjust this value to position the emoji higher */
+    z-index: 0;
 }
 
 .emoji-reaction:hover .emoji-icon {
-    transform: scale(3);
+    transform: scale(2.5) translateY(-50%); /* Adjust the hover effect to go over the button */
 }
 
 .emoji-count {
     margin-top: 5px;
+    z-index: 1;
 }

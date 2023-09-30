@@ -1,3 +1,5 @@
+const reactionButtons = document.querySelectorAll('.emoji-reaction');
+
 // Fetch current counts and display them
 async function loadCounts() {
     const response = await fetch('/.netlify/functions/add-reaction');
@@ -8,8 +10,9 @@ async function loadCounts() {
         if (data[id]) {
             container.querySelectorAll('.emoji-reaction').forEach(button => {
                 const emoji = button.dataset.emoji;
+                const countSpan = button.querySelector('.emoji-count');
                 if (data[id][emoji]) {
-                    animateCount(button, data[id][emoji]);
+                    countSpan.innerText = data[id][emoji];
                 }
             });
         }
@@ -20,64 +23,56 @@ async function loadCounts() {
 function animateCount(button, targetCount) {
     let currentCount = 0;
     const increment = targetCount / 30; // 30 frames for 3 seconds
+    const countSpan = button.querySelector('.emoji-count');
     const interval = setInterval(() => {
         currentCount += increment;
         if (currentCount >= targetCount) {
             clearInterval(interval);
             currentCount = targetCount;
         }
-        button.innerText = `${button.dataset.emoji} ${Math.round(currentCount)}`;
+        countSpan.innerText = Math.round(currentCount);
     }, 100); // 100ms interval for smooth animation
 }
 
-// Existing code to handle button clicks
-const reactionButtons = document.querySelectorAll('.emoji-reaction');
-reactionButtons.forEach(button => {
-    button.addEventListener('click', async (e) => {
-        const emoji = e.target.dataset.emoji;
-        const container = e.target.closest('.emoji-reaction-container');
-        const id = container.dataset.id;
-
-        const response = await fetch('/.netlify/functions/add-reaction', {
-            method: 'POST',
-            body: JSON.stringify({ emoji, id }),
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        const data = await response.json();
-        button.innerText = `${emoji} ${data.count}`;
-    });
-});
-
-function emojisplosion(button, emoji) {
+// Emojisplosion effect
+function emojisplosion(button) {
+    const emoji = button.dataset.emoji;
+    const rect = button.getBoundingClientRect();
     const explosionCount = 10;
-    const container = document.createElement('div');
-    container.style.position = 'absolute';
-    container.style.top = `${button.offsetTop}px`;
-    container.style.left = `${button.offsetLeft}px`;
-    document.body.appendChild(container);
 
     for (let i = 0; i < explosionCount; i++) {
         const span = document.createElement('span');
         span.innerText = emoji;
-        span.style.position = 'absolute';
-        span.style.fontSize = '20px';
-        span.style.transition = 'all 0.5s ease-out';
-        span.style.transform = `translate(${Math.random() * 100 - 50}px, ${Math.random() * 100 - 50}px)`;
-        span.style.opacity = 0;
-        container.appendChild(span);
-    }
+        span.style.position = 'fixed';
+        span.style.left = `${rect.left + window.scrollX}px`;
+        span.style.top = `${rect.top + window.scrollY}px`;
+        span.style.fontSize = '24px';
+        span.style.transition = 'transform 0.5s, opacity 0.5s';
+        span.style.transformOrigin = 'center';
+        span.style.zIndex = 9999;
 
-    setTimeout(() => {
-        document.body.removeChild(container);
-    }, 500);
+        const angle = Math.random() * 2 * Math.PI;
+        const distance = Math.random() * 50;
+        const x = distance * Math.cos(angle);
+        const y = distance * Math.sin(angle);
+
+        document.body.appendChild(span);
+
+        requestAnimationFrame(() => {
+            span.style.transform = `translate(${x}px, ${y}px) scale(0)`;
+            span.style.opacity = '0';
+        });
+
+        setTimeout(() => {
+            document.body.removeChild(span);
+        }, 500);
+    }
 }
 
-// Modify the button click event listener to add the explosion effect
+// Handle button clicks
 reactionButtons.forEach(button => {
     button.addEventListener('click', async (e) => {
-        const emoji = e.target.dataset.emoji;
+        const emoji = e.target.dataset.emoji || e.target.parentElement.dataset.emoji;
         const container = e.target.closest('.emoji-reaction-container');
         const id = container.dataset.id;
 
@@ -90,14 +85,15 @@ reactionButtons.forEach(button => {
         });
         const data = await response.json();
         if (data && data.count) {
-            button.innerText = `${emoji} ${data.count}`;
-            emojisplosion(button, emoji);
+            const countSpan = button.querySelector('.emoji-count');
+            countSpan.innerText = data.count;
         } else {
             console.error('Unexpected response:', data);
         }
+
+        emojisplosion(button);
     });
 });
-
 
 // Load counts when the page loads
 loadCounts();

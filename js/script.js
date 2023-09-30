@@ -1,6 +1,6 @@
 const reactionButtons = document.querySelectorAll('.emoji-reaction');
 
-// Fetch current counts and display them
+// Fetch current counts and animate them
 async function loadCounts() {
     const response = await fetch('/.netlify/functions/add-reaction');
     const data = await response.json();
@@ -12,7 +12,7 @@ async function loadCounts() {
                 const emoji = button.dataset.emoji;
                 const countSpan = button.querySelector('.emoji-count');
                 if (data[id][emoji]) {
-                    countSpan.innerText = data[id][emoji];
+                    animateCount(button, data[id][emoji]);
                 }
             });
         }
@@ -22,9 +22,8 @@ async function loadCounts() {
 // Animate count from 0 to actual value in 3 seconds
 function animateCount(button, targetCount) {
     let currentCount = 0;
-    const increment = targetCount / 300; // 30 frames for 3 seconds
+    const increment = targetCount / 30; // 30 frames for 3 seconds
     const countSpan = button.querySelector('.emoji-count');
-    countSpan.innerText = '0'; // Set initial count to 0
     const interval = setInterval(() => {
         currentCount += increment;
         if (currentCount >= targetCount) {

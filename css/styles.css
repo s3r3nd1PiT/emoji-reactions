@@ -6,14 +6,30 @@ body {
     height: 100vh;
     background-color: #f4f4f4;
 }
+
+.emoji-reaction-container {
+    display: flex;
+    align-items: center;
+}
+
 .emoji-reaction {
     background-color: #fff;
-    border: 1px solid #ccc;
+    border: none;
     padding: 10px 20px;
     margin: 5px;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s, transform 0.2s;
+    border-radius: 25px;
+    display: flex;
+    align-items: center;
+    font-size: 16px;
 }
+
 .emoji-reaction:hover {
     background-color: #e6e6e6;
+    transform: scale(1.1);
+}
+
+.emoji-reaction:active {
+    transform: scale(0.9);
 }

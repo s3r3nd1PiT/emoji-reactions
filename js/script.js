@@ -24,6 +24,7 @@ function animateCount(button, targetCount) {
     let currentCount = 0;
     const increment = targetCount / 30; // 30 frames for 3 seconds
     const countSpan = button.querySelector('.emoji-count');
+    countSpan.getBoundingClientRect(); // force reflow
     const interval = setInterval(() => {
         currentCount += increment;
         if (currentCount >= targetCount) {
@@ -36,17 +37,15 @@ function animateCount(button, targetCount) {
 
 // Emojisplosion effect
 function emojisplosion(button) {
-    const emoji = button.dataset.emoji;
-    const rect = button.getBoundingClientRect();
+    const emojiSpan = button.querySelector('.emoji-icon');
+    const rect = emojiSpan.getBoundingClientRect();
     const explosionCount = 10;
 
     for (let i = 0; i < explosionCount; i++) {
-        const span = document.createElement('span');
-        span.innerText = emoji;
+        const span = emojiSpan.cloneNode(true);
         span.style.position = 'fixed';
         span.style.left = `${rect.left + window.scrollX}px`;
         span.style.top = `${rect.top + window.scrollY}px`;
-        span.style.fontSize = '24px';
         span.style.transition = 'transform 0.5s, opacity 0.5s';
         span.style.transformOrigin = 'center';
         span.style.zIndex = 9999;

@@ -37,7 +37,7 @@ body {
 }
 
 .emoji-reaction:hover .emoji-icon {
-    transform: scale(2.5) translateY(-50%); /* Adjust the hover effect to go over the button */
+    transform: scale(2.5);
 }
 
 .emoji-count {

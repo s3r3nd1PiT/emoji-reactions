@@ -18,18 +18,19 @@ body {
     padding: 10px 20px;
     margin: 5px;
     cursor: pointer;
-    transition: background-color 0.3s, transform 0.2s;
-    border-radius: 25px;
+    transition: transform 0.3s, background-color 0.3s;
+    font-size: 24px;
     display: flex;
     align-items: center;
-    font-size: 16px;
+    border-radius: 50%;
+    overflow: hidden;
 }
 
 .emoji-reaction:hover {
+    transform: scale(3);
     background-color: #e6e6e6;
-    transform: scale(1.1);
 }
 
-.emoji-reaction:active {
-    transform: scale(0.9);
+.emoji-count {
+    margin-left: 10px;
 }

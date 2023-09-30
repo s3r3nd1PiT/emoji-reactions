@@ -22,7 +22,7 @@ async function loadCounts() {
 // Animate count from 0 to actual value in 3 seconds
 function animateCount(button, targetCount) {
     let currentCount = 0;
-    const increment = targetCount / 30; // 30 frames for 3 seconds
+    const increment = targetCount / 300; // 30 frames for 3 seconds
     const countSpan = button.querySelector('.emoji-count');
     countSpan.innerText = '0'; // Set initial count to 0
     const interval = setInterval(() => {

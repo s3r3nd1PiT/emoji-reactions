@@ -24,13 +24,19 @@ body {
     align-items: center;
     border-radius: 50%;
     overflow: hidden;
+    flex-direction: column;
+    justify-content: center;
 }
 
-.emoji-reaction:hover {
+.emoji-icon {
+    font-size: 24px;
+    transition: transform 0.3s;
+}
+
+.emoji-reaction:hover .emoji-icon {
     transform: scale(3);
-    background-color: #e6e6e6;
 }
 
 .emoji-count {
-    margin-left: 10px;
+    margin-top: 5px;
 }

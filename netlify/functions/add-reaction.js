@@ -1,3 +1,5 @@
+let reactions = {};
+
 exports.handler = async (event, context) => {
     if (event.httpMethod === 'GET') {
         return {

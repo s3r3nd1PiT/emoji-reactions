@@ -24,7 +24,7 @@ function animateCount(button, targetCount) {
     let currentCount = 0;
     const increment = targetCount / 30; // 30 frames for 3 seconds
     const countSpan = button.querySelector('.emoji-count');
-    countSpan.getBoundingClientRect(); // force reflow
+    countSpan.innerText = '0'; // Set initial count to 0
     const interval = setInterval(() => {
         currentCount += increment;
         if (currentCount >= targetCount) {

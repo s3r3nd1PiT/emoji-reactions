@@ -124,5 +124,12 @@ document.querySelectorAll('.emoji-reaction').forEach(button => {
     });
 });
 
+// Prevent Default Behavior on Double Click
+document.querySelectorAll('.emoji-reaction, .emoji-count').forEach(element => {
+    element.addEventListener('dblclick', (e) => {
+        e.preventDefault();
+    });
+});
+
 // Load counts when the page loads
 loadCounts();

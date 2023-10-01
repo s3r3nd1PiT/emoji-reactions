@@ -44,6 +44,39 @@ function animateCount(element, targetCount) {
     requestAnimationFrame(step);
 }
 
+// Emojisplosion effect
+function emojisplosion(button) {
+    const emojiSpan = button.querySelector('.emoji-icon');
+    const rect = emojiSpan.getBoundingClientRect();
+    const explosionCount = 10;
+
+    for (let i = 0; i < explosionCount; i++) {
+        const span = emojiSpan.cloneNode(true);
+        span.style.position = 'fixed';
+        span.style.left = `${rect.left + window.scrollX}px`;
+        span.style.top = `${rect.top + window.scrollY}px`;
+        span.style.transition = 'transform 0.5s, opacity 0.5s';
+        span.style.transformOrigin = 'center';
+        span.style.zIndex = 9999;
+
+        const angle = Math.random() * 2 * Math.PI;
+        const distance = Math.random() * 50;
+        const x = distance * Math.cos(angle);
+        const y = distance * Math.sin(angle);
+
+        document.body.appendChild(span);
+
+        requestAnimationFrame(() => {
+            span.style.transform = `translate(${x}px, ${y}px) scale(0)`;
+            span.style.opacity = '0';
+        });
+
+        setTimeout(() => {
+            document.body.removeChild(span);
+        }, 500);
+    }
+}
+
 // Fetch current counts and display them
 function loadCounts() {
     document.querySelectorAll('.emoji-reaction-container').forEach(container => {
@@ -83,6 +116,9 @@ document.querySelectorAll('.emoji-reaction').forEach(button => {
         reactionRef.transaction((count) => {
             return (count || 0) + 1;
         });
+
+        // Trigger the explosion effect
+        emojisplosion(button);
     });
 });
 

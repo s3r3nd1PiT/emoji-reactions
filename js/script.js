@@ -48,19 +48,20 @@ function animateCount(element, targetCount) {
 function emojisplosion(button) {
     const emojiSpan = button.querySelector('.emoji-icon');
     const rect = emojiSpan.getBoundingClientRect();
-    const explosionCount = 10;
+    const explosionCount = 15;
 
     for (let i = 0; i < explosionCount; i++) {
         const span = emojiSpan.cloneNode(true);
         span.style.position = 'fixed';
         span.style.left = `${rect.left + window.scrollX}px`;
         span.style.top = `${rect.top + window.scrollY}px`;
-        span.style.transition = 'transform 0.5s, opacity 0.5s';
+        span.style.transition = 'transform 0.8s ease-out, opacity 0.8s';
         span.style.transformOrigin = 'center';
         span.style.zIndex = 9999;
+        span.style.fontSize = '1.5em'; // Make the exploded emojis slightly larger
 
         const angle = Math.random() * 2 * Math.PI;
-        const distance = Math.random() * 50;
+        const distance = 20 + Math.random() * 80; // Minimum distance of 20px and maximum of 100px
         const x = distance * Math.cos(angle);
         const y = distance * Math.sin(angle);
 
@@ -73,7 +74,7 @@ function emojisplosion(button) {
 
         setTimeout(() => {
             document.body.removeChild(span);
-        }, 500);
+        }, 800);
     }
 }
 

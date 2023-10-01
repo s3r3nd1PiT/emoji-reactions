@@ -11,22 +11,46 @@ const firebaseConfig = {
 
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
-const database = firebase.database();
 
-const reactionButtons = document.querySelectorAll('.emoji-reaction');
+// Reference to database
+const db = firebase.database();
 
-// Fetch current counts from Firebase and display them
+// Animate count from 0 to actual value in 3 seconds
+function animateCount(element, targetCount) {
+    let currentCount = 0;
+    const increment = targetCount / 30; // 30 frames for 3 seconds
+    const interval = setInterval(() => {
+        currentCount += increment;
+        if (currentCount >= targetCount) {
+            clearInterval(interval);
+            currentCount = targetCount;
+        }
+        element.innerText = Math.round(currentCount);
+    }, 100); // 100ms interval for smooth animation
+}
+
+// Fetch current counts and display them
 function loadCounts() {
-    database.ref('reactions/').once('value').then((snapshot) => {
-        const data = snapshot.val();
-        document.querySelectorAll('.emoji-reaction-container').forEach(container => {
-            const id = container.dataset.id;
-            if (data && data[id]) {
+    document.querySelectorAll('.emoji-reaction-container').forEach(container => {
+        const id = container.dataset.id;
+        const reactionRef = db.ref('reactions/' + id);
+
+        // Listen for changes in the database
+        reactionRef.on('value', (snapshot) => {
+            const data = snapshot.val();
+            if (data) {
                 container.querySelectorAll('.emoji-reaction').forEach(button => {
                     const emoji = button.dataset.emoji;
                     const countSpan = button.querySelector('.emoji-count');
-                    if (data[id][emoji]) {
-                        countSpan.innerText = data[id][emoji];
+                    if (data[emoji]) {
+                        const currentCount = parseInt(countSpan.innerText) || 0;
+                        if (currentCount === 0) {
+                            animateCount(countSpan, data[emoji]);
+                        } else {
+                            countSpan.innerText = data[emoji];
+                        }
+                    } else {
+                        countSpan.innerText = '0'; // Reset to 0 if no data for that emoji
                     }
                 });
             }
@@ -34,76 +58,20 @@ function loadCounts() {
     });
 }
 
-// Emojisplosion effect
-function emojisplosion(button) {
-    const emojiSpan = button.querySelector('.emoji-icon');
-    const rect = emojiSpan.getBoundingClientRect();
-    const explosionCount = 10;
-
-    for (let i = 0; i < explosionCount; i++) {
-        const span = emojiSpan.cloneNode(true);
-        span.style.position = 'fixed';
-        span.style.left = `${rect.left + window.scrollX}px`;
-        span.style.top = `${rect.top + window.scrollY}px`;
-        span.style.transition = 'transform 0.5s, opacity 0.5s';
-        span.style.transformOrigin = 'center';
-        span.style.zIndex = 9999;
-
-        const angle = Math.random() * 2 * Math.PI;
-        const distance = Math.random() * 50;
-        const x = distance * Math.cos(angle);
-        const y = distance * Math.sin(angle);
-
-        document.body.appendChild(span);
-
-        requestAnimationFrame(() => {
-            span.style.transform = `translate(${x}px, ${y}px) scale(0)`;
-            span.style.opacity = '0';
-        });
-
-        setTimeout(() => {
-            document.body.removeChild(span);
-        }, 500);
-    }
-}
-
-// Update reaction count in Firebase
-function updateReactionCount(emoji, id) {
-    const reactionRef = database.ref('reactions/' + id + '/' + emoji);
-    reactionRef.transaction((currentCount) => {
-        return (currentCount || 0) + 1;
-    });
-}
-
 // Handle button clicks
-reactionButtons.forEach(button => {
-    button.addEventListener('click', (e) => {
+document.querySelectorAll('.emoji-reaction').forEach(button => {
+    button.addEventListener('click', async (e) => {
         const emoji = e.target.dataset.emoji || e.target.parentElement.dataset.emoji;
         const container = e.target.closest('.emoji-reaction-container');
         const id = container.dataset.id;
-        updateReactionCount(emoji, id);
-        emojisplosion(button);
+        const reactionRef = db.ref('reactions/' + id + '/' + emoji);
+
+        // Increment the count in the database
+        reactionRef.transaction((count) => {
+            return (count || 0) + 1;
+        });
     });
 });
-
-// Animate count from 0 to actual value in 3 seconds
-function animateCount(button, targetCount) {
-    let currentCount = 0;
-    const increment = targetCount / 30; // 30 frames for 3 seconds
-    const countSpan = button.querySelector('.emoji-count');
-    const interval = setInterval(() => {
-        currentCount += increment;
-        if (currentCount >= targetCount) {
-            clearInterval(interval);
-            currentCount = targetCount;
-        }
-        countSpan.innerText = Math.round(currentCount);
-    }, 100); // 100ms interval for smooth animation
-}
-
-// Load counts when the page loads
-loadCounts();
-
 
 // Load counts when the page loads
 loadCounts();

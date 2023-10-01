@@ -95,6 +95,7 @@ function loadCounts() {
                         const currentCount = parseInt(countSpan.innerText) || 0;
                         if (currentCount !== data[emoji]) {
                             animateCount(countSpan, data[emoji]);
+                            emojisplosion(button); // Trigger the explosion effect on counter update
                         }
                     } else {
                         countSpan.innerText = '0'; // Reset to 0 if no data for that emoji

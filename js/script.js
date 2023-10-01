@@ -15,18 +15,33 @@ firebase.initializeApp(firebaseConfig);
 // Reference to database
 const db = firebase.database();
 
-// Animate count from 0 to actual value in 3 seconds
+// Easing function for smoother animation
+function easeInOutQuad(t) {
+    return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+}
+
+// Animate count smoothly
 function animateCount(element, targetCount) {
-    let currentCount = 0;
-    const increment = targetCount / 30; // 30 frames for 3 seconds
-    const interval = setInterval(() => {
-        currentCount += increment;
-        if (currentCount >= targetCount) {
-            clearInterval(interval);
-            currentCount = targetCount;
+    const duration = 1000; // 1 second
+    let start = null;
+    let currentCount = parseInt(element.innerText) || 0;
+
+    function step(timestamp) {
+        if (!start) start = timestamp;
+        const progress = (timestamp - start) / duration;
+        const delta = easeInOutQuad(progress) * (targetCount - currentCount);
+        const count = currentCount + delta;
+
+        element.innerText = Math.round(count);
+
+        if (progress < 1) {
+            requestAnimationFrame(step);
+        } else {
+            element.innerText = targetCount; // Ensure final value is set correctly
         }
-        element.innerText = Math.round(currentCount);
-    }, 100); // 100ms interval for smooth animation
+    }
+
+    requestAnimationFrame(step);
 }
 
 // Fetch current counts and display them
@@ -44,10 +59,8 @@ function loadCounts() {
                     const countSpan = button.querySelector('.emoji-count');
                     if (data[emoji]) {
                         const currentCount = parseInt(countSpan.innerText) || 0;
-                        if (currentCount === 0) {
+                        if (currentCount !== data[emoji]) {
                             animateCount(countSpan, data[emoji]);
-                        } else {
-                            countSpan.innerText = data[emoji];
                         }
                     } else {
                         countSpan.innerText = '0'; // Reset to 0 if no data for that emoji
@@ -60,7 +73,7 @@ function loadCounts() {
 
 // Handle button clicks
 document.querySelectorAll('.emoji-reaction').forEach(button => {
-    button.addEventListener('click', async (e) => {
+    button.addEventListener('click', (e) => {
         const emoji = e.target.dataset.emoji || e.target.parentElement.dataset.emoji;
         const container = e.target.closest('.emoji-reaction-container');
         const id = container.dataset.id;

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INScaPE Game Alice</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+    body,html {
+    background: linear-gradient(180deg, #212529, #343a40, #592941, #264d8b, #395b2b, #a48422, #996025, #7f0000, #590f00, #212529, #343a40);
+    background-size: 1800% 1800%;
+
+    -webkit-animation: gradientPTDR 666s ease infinite;
+    -moz-animation: gradientPTDR 666s ease infinite;
+    animation: gradientPTDR 666s ease infinite;
+}
+
+@-webkit-keyframes gradientPTDR {
+    0%{background-position:50% 0%}
+    50%{background-position:50% 100%}
+    100%{background-position:50% 0%}
+}
+@-moz-keyframes gradientPTDR {
+    0%{background-position:50% 0%}
+    50%{background-position:50% 100%}
+    100%{background-position:50% 0%}
+}
+@keyframes gradientPTDR {
+    0%{background-position:50% 0%}
+    50%{background-position:50% 100%}
+    100%{background-position:50% 0%}
+}
+</style>
+</head>
+<body>
+<!-- Firebase App (the core Firebase SDK) -->
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+
+<!-- Firebase Realtime Database -->
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    
+<div class="emoji-reaction-container" data-id="e-wonderland">
+    <button class="emoji-reaction" data-emoji="😭">
+        <span class="emoji-icon">😭</span>
+        <span class="emoji-count">0</span>
+    </button>
+        <button class="emoji-reaction" data-emoji="😓">
+        <span class="emoji-icon">😓</span>
+        <span class="emoji-count">0</span>
+    </button>
+    <button class="emoji-reaction" data-emoji="😑">
+        <span class="emoji-icon">😑</span>
+        <span class="emoji-count">0</span>
+    </button>
+    <button class="emoji-reaction" data-emoji="😐">
+        <span class="emoji-icon">😐</span>
+        <span class="emoji-count">0</span>
+    </button>
+    <button class="emoji-reaction" data-emoji="🤔">
+        <span class="emoji-icon">🤔</span>
+        <span class="emoji-count">0</span>
+    </button>
+    <button class="emoji-reaction" data-emoji="😌">
+        <span class="emoji-icon">😌</span>
+        <span class="emoji-count">0</span>
+    </button>
+    <button class="emoji-reaction" data-emoji="🙂">
+        <span class="emoji-icon">🙂</span>
+        <span class="emoji-count">0</span>
+    </button>
+    <button class="emoji-reaction" data-emoji="🤗">
+        <span class="emoji-icon">🤗</span>
+        <span class="emoji-count">0</span>
+    </button>
+    <button class="emoji-reaction" data-emoji="😎">
+        <span class="emoji-icon">😎</span>
+        <span class="emoji-count">0</span>
+    </button>
+    <button class="emoji-reaction" data-emoji="🚀">
+        <span class="emoji-icon">🚀</span>
+        <span class="emoji-count">0</span>
+    </button>
+</div>
+    <script src="js/script.js"></script>
+</body>
+</html>
